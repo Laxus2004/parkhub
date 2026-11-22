@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ParkHub — Admin Panel</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="app">
+    <!-- ============ Sidebar ============ -->
+    <nav class="sidebar" aria-label="Admin navigation">
+      <div class="sidebar-brand">
+        <span class="brand-mark">P</span>
+        <span>
+          <span class="brand-name">ParkHub</span>
+          <span class="brand-sub">Admin Panel</span>
+        </span>
+      </div>
+      <ul class="nav-list">
+        <li>
+          <button class="nav-item is-active" data-nav="overview">
+            <span class="nav-item-main"><span class="nav-icon">D</span><span class="nav-label">Dashboard</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="slots">
+            <span class="nav-item-main"><span class="nav-icon">F</span><span class="nav-label">Facility Slots</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="users">
+            <span class="nav-item-main"><span class="nav-icon">R</span><span class="nav-label">Registered Users</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="walkins">
+            <span class="nav-item-main"><span class="nav-icon">W</span><span class="nav-label">Walk-ins</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="reservations">
+            <span class="nav-item-main"><span class="nav-icon">R</span><span class="nav-label">Reservations</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="history">
+            <span class="nav-item-main"><span class="nav-icon">P</span><span class="nav-label">Parking History</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="reports">
+            <span class="nav-item-main"><span class="nav-icon">R</span><span class="nav-label">Reports</span></span>
+            <span class="nav-badge" id="badge-reports" hidden></span>
+          </button>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn-logout" data-logout>Log out</button>
+      </div>
+    </nav>
+
+    <!-- ============ Header ============ -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" id="menu-toggle" aria-label="Show navigation" title="Show navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-title">Admin Panel</div>
+      </div>
+      <div class="user-chip">
+        <div class="avatar" id="user-avatar">A</div>
+        <span class="user-name" id="user-name">Super Admin</span>
+      </div>
+    </header>
+
+    <!-- ============ Workspace ============ -->
+    <main class="workspace">
+      <!-- Facility selector (hidden on Registered Users and Reports) -->
+      <div class="facility-tabs" id="facility-tabs"></div>
+
+      <section data-view="overview">
+        <div class="page-head">
+          <h1 class="page-title upper">Admin Dashboard</h1>
+          <p class="page-sub mono" id="overview-sub"></p>
+        </div>
+        <div class="kpi-grid cols-3" id="overview-kpis"></div>
+      </section>
+
+      <section data-view="slots" hidden>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <span class="card-title" id="slots-title"></span>
+              <span class="mono muted" style="margin-left: 12px; font-size: 11px" id="slots-summary"></span>
+            </div>
+            <div class="chip-group" id="slots-zones"></div>
+          </div>
+          <div class="slot-grid" id="slots-grid"></div>
+          <div id="slots-legend"></div>
+          <div style="border-top: 1px solid var(--line)">
+            <div class="card-head">
+              <span class="card-subhead">Slot Details</span>
+              <span class="card-count" id="slots-count"></span>
+            </div>
+            <div id="slots-table"></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-view="users" hidden>
+        <div class="stack">
+          <h1 class="page-title upper">Registered Users</h1>
+          <div class="search" style="max-width: 384px">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5" />
+              <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <input class="input" id="users-search" placeholder="Search name or username…" />
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <span class="card-subhead">Staff Accounts</span>
+              <span class="card-count" id="staff-count"></span>
+            </div>
+            <div id="staff-table"></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <span class="card-subhead">Driver Accounts</span>
+              <span class="card-count" id="drivers-count"></span>
+            </div>
+            <div id="drivers-table"></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-view="walkins" hidden>
+        <div class="stack">
+          <h1 class="page-title upper">Walk-ins</h1>
+          <div class="kpi-grid cols-3" id="walkins-kpis"></div>
+          <div class="card">
+            <div class="card-head">
+              <span class="card-subhead">Active Walk-in Sessions</span>
+              <span class="card-count" id="walkins-count"></span>
+            </div>
+            <div id="walkins-table"></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-view="reservations" hidden>
+        <div class="stack">
+          <h1 class="page-title upper">Reservations</h1>
+          <div class="kpi-grid cols-3" id="reservations-kpis"></div>
+          <div class="card">
+            <div class="card-head">
+              <span class="card-subhead">All Reservations</span>
+              <span class="card-count" id="reservations-count"></span>
+            </div>
+            <div id="reservations-table"></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-view="history" hidden>
+        <div class="stack">
+          <h1 class="page-title upper">Parking History</h1>
+          <div class="card">
+            <div class="card-head">
+              <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+                <span class="card-subhead">Completed Sessions</span>
+              </div>
+              <span class="card-count" id="history-count"></span>
+            </div>
+            <div id="history-table"></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-view="reports" hidden>
+        <div class="stack">
+          <h1 class="page-title upper">Reports</h1>
+          <div class="kpi-grid cols-3" id="reports-kpis"></div>
+          <div class="card">
+            <div class="card-head">
+              <div style="display: flex; align-items: center; gap: 12px">
+                <h2 class="card-title">Slot Damage Reports</h2>
+                <span class="count-pill" id="damage-count" hidden></span>
+              </div>
+            </div>
+            <div id="damage-table"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-subhead">Top Drivers by Activity</span></div>
+            <div id="drivers-activity-table"></div>
+          </div>
+          <div style="text-align: right">
+            <button class="link-btn" id="reset-data" title="Restore the original demo data">Reset demo data</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/superadmin.js"></script>
+  </body>
+</html>

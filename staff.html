@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ParkHub — Staff Panel</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="app">
+    <!-- ============ Sidebar ============ -->
+    <nav class="sidebar" aria-label="Staff navigation">
+      <div class="sidebar-brand">
+        <span class="brand-mark">P</span>
+        <span>
+          <span class="brand-name">ParkHub</span>
+          <span class="brand-sub">Staff Portal</span>
+        </span>
+      </div>
+      <ul class="nav-list">
+        <li>
+          <button class="nav-item is-active" data-nav="facility">
+            <span class="nav-item-main"><span class="nav-icon">D</span><span class="nav-label">Dashboard</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="map">
+            <span class="nav-item-main"><span class="nav-icon">S</span><span class="nav-label">Slot Occupancy Map</span></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="sessions">
+            <span class="nav-item-main"><span class="nav-icon">R</span><span class="nav-label">Reservation Sessions</span></span>
+            <span class="nav-badge" id="badge-sessions" hidden></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="walkins">
+            <span class="nav-item-main"><span class="nav-icon">W</span><span class="nav-label">Walk-ins</span></span>
+            <span class="nav-badge" id="badge-walkins" hidden></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="reservations">
+            <span class="nav-item-main"><span class="nav-icon">P</span><span class="nav-label">Parking Reservations</span></span>
+            <span class="nav-badge" id="badge-reservations" hidden></span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-nav="history">
+            <span class="nav-item-main"><span class="nav-icon">P</span><span class="nav-label">Payments &amp; Parking History</span></span>
+          </button>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn-logout" data-logout>Log out</button>
+      </div>
+    </nav>
+
+    <!-- ============ Header ============ -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" id="menu-toggle" aria-label="Hide navigation" title="Hide navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-title">Staff Panel</div>
+      </div>
+      <div class="user-chip">
+        <div class="avatar" id="user-avatar">S</div>
+        <span class="user-name" id="user-name">Staff</span>
+      </div>
+    </header>
+
+    <!-- ============ Workspace ============ -->
+    <main class="workspace">
+      <!-- Dashboard / Facility control -->
+      <section data-view="facility">
+        <div class="page-head">
+          <h1 class="page-title">Staff Dashboard</h1>
+          <p class="page-sub" id="welcome-sub"></p>
+        </div>
+
+        <div id="facility-select"></div>
+        <div class="kpi-grid cols-4" id="facility-kpis" style="margin-bottom: 32px"></div>
+
+        <div class="two-col">
+          <div class="card" id="entry-card">
+            <div class="card-head"><h2 class="card-title">Record Vehicle Entry</h2></div>
+            <form id="entry-form" class="card-body stack-sm" autocomplete="off">
+              <label class="field">
+                <span class="label">Plate Number</span>
+                <input class="input mono upper" id="entry-plate" placeholder="ABC 1234" />
+              </label>
+              <label class="field">
+                <span class="label">Driver Name</span>
+                <input class="input" id="entry-driver" placeholder="Optional" />
+              </label>
+              <div class="field">
+                <span class="label" style="display: block; margin-bottom: 6px">Vehicle Type</span>
+                <div class="seg" id="entry-vehicle"></div>
+              </div>
+              <div style="border-top: 1px solid var(--line); padding-top: 16px">
+                <div id="entry-slot"></div>
+                <button type="submit" class="btn btn-primary btn-block" id="entry-submit">Issue Ticket</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="stack" style="--gap: 32px">
+            <div id="ticket-box"></div>
+            <div class="card">
+              <div class="card-head"><h2 class="card-title">Rate Card</h2></div>
+              <ul class="rate-list">
+                <li>
+                  <span>Automobile</span><span class="mono"><span id="rate-auto"></span> <span class="muted">/ hour</span></span>
+                </li>
+                <li>
+                  <span>Motorcycle</span><span class="mono"><span id="rate-moto"></span> <span class="muted">/ hour</span></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slot occupancy map -->
+      <section data-view="map" hidden>
+        <div class="card">
+          <div class="card-head">
+            <h2 class="card-title">Slot Occupancy Map</h2>
+            <div class="chip-group" id="map-zones"></div>
+          </div>
+          <div class="slot-grid" id="map-grid"></div>
+          <div id="slot-detail"></div>
+          <div id="map-legend"></div>
+        </div>
+      </section>
+
+      <!-- Active reservation sessions -->
+      <section data-view="sessions" hidden>
+        <div class="stack">
+          <div class="kpi-grid cols-3" id="sessions-kpis"></div>
+          <div class="card">
+            <div class="card-head">
+              <h2 class="card-title">Active Reservation Sessions</h2>
+              <span class="label" id="sessions-count"></span>
+            </div>
+            <div class="search-bar">
+              <div class="search">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5" />
+                  <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <input class="input" id="sessions-search" placeholder="Search ticket, plate, driver, vehicle type…" />
+                <button type="button" class="search-clear" data-clear="sessions-search" hidden>✕</button>
+              </div>
+            </div>
+            <div id="sessions-table"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Walk-ins -->
+      <section data-view="walkins" hidden>
+        <div class="stack">
+          <div class="kpi-grid cols-3" id="walkins-kpis"></div>
+          <div class="card">
+            <div class="search-bar">
+              <div class="search">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5" />
+                  <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <input class="input" id="walkins-search" placeholder="Search ticket, plate, customer, vehicle type…" />
+                <button type="button" class="search-clear" data-clear="walkins-search" hidden>✕</button>
+              </div>
+            </div>
+            <div id="walkins-table"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Parking reservations -->
+      <section data-view="reservations" hidden>
+        <div class="card">
+          <div class="card-head">
+            <h2 class="card-title">Parking Reservations</h2>
+            <span class="label" id="reservations-count"></span>
+          </div>
+          <div id="reservations-table"></div>
+        </div>
+      </section>
+
+      <!-- Payments & history -->
+      <section data-view="history" hidden>
+        <div class="stack">
+          <div class="kpi-grid cols-3" id="history-kpis"></div>
+          <div class="card">
+            <div class="card-head">
+              <h2 class="card-title">Payments &amp; Parking History</h2>
+              <span class="label">Latest transactions</span>
+            </div>
+            <div id="history-table"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Arrival alert popups -->
+    <div class="alert-stack" id="alert-stack"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/staff.js"></script>
+  </body>
+</html>
